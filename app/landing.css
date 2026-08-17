@@ -34,7 +34,8 @@
 .workflow-list > div > span { color:#8fc6f2; font-family:var(--font-geist-mono); font-size:12px; }
 .workflow-list h3 { margin:0; font-size:19px; }.workflow-list p { margin:8px 0 0; color:#bfc5cb; font-size:14px; line-height:1.6; }
 .capabilities-section { background:var(--canvas); }
-.capability-grid { display:grid; grid-template-columns:repeat(3,1fr); margin-top:52px; border-top:1px solid #d6d6d6; border-left:1px solid #d6d6d6; }
+.hero-grid { grid-template-columns:minmax(0,790px); gap:0; }
+.capability-grid { display:grid; grid-template-columns:repeat(2,1fr); margin-top:52px; border-top:1px solid #d6d6d6; border-left:1px solid #d6d6d6; }
 .capability-grid article { padding:30px; background:#fff; border-right:1px solid #d6d6d6; border-bottom:1px solid #d6d6d6; }
 .capability-grid article > svg { width:21px; height:21px; color:var(--blue); }.capability-grid h3 { margin-top:18px; font-size:17px; }
 .how-section { background:#fff; }

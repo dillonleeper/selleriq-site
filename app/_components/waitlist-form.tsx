@@ -12,8 +12,8 @@ type WaitlistFormProps = {
 
 type FormStatus = "idle" | "submitting" | "qualified" | "complete" | "error";
 
-const revenueOptions = ["Under $50k / month", "$50k–$250k / month", "$250k–$1M / month", "$1M+ / month"];
-const skuOptions = ["Under 25", "25–100", "101–500", "500+"];
+const revenueOptions = ["Under $50k / month", "$50k to $250k / month", "$250k to $1M / month", "$1M+ / month"];
+const skuOptions = ["Under 25", "25 to 100", "101 to 500", "500+"];
 const painOptions = ["Profit clarity", "Inventory planning", "Traffic & conversion", "Reconciling reports", "Other"];
 
 function getAttribution() {
@@ -89,7 +89,7 @@ export function WaitlistForm({ idPrefix, location, compact = false }: WaitlistFo
     return (
       <div className="signup-success" role="status">
         <span><Check aria-hidden="true" /></span>
-        <div><b>You’re on the list.</b><p>We’ll reach out as private-beta capacity opens.</p></div>
+        <div><b>You’re on the list.</b><p>We’ll contact you when a beta spot opens.</p></div>
       </div>
     );
   }
@@ -97,15 +97,15 @@ export function WaitlistForm({ idPrefix, location, compact = false }: WaitlistFo
   if (phase === "qualification") {
     return (
       <form className="qualification-form" onSubmit={handleQualification}>
-        <div className="qualification-head"><span><Check aria-hidden="true" /></span><div><b>Your spot is saved.</b><p>Four optional details help us prioritize the right beta sellers.</p></div></div>
+        <div className="qualification-head"><span><Check aria-hidden="true" /></span><div><b>Your email is saved.</b><p>These optional details help us prioritize beta access.</p></div></div>
         <div className="qualification-grid">
           <label htmlFor={`${idPrefix}-revenue`}>Monthly Amazon revenue<select id={`${idPrefix}-revenue`} name="revenueBand" defaultValue=""><option value="">Prefer not to say</option>{revenueOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
           <label htmlFor={`${idPrefix}-skus`}>Active SKU count<select id={`${idPrefix}-skus`} name="skuBand" defaultValue=""><option value="">Prefer not to say</option>{skuOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
           <label htmlFor={`${idPrefix}-pain`}>Biggest pain today<select id={`${idPrefix}-pain`} name="primaryPain" defaultValue=""><option value="">Choose one</option>{painOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
-          <label htmlFor={`${idPrefix}-tools`}>Tools you use now<input id={`${idPrefix}-tools`} name="currentTools" placeholder="Sellerboard, spreadsheets…" maxLength={160} /></label>
+          <label htmlFor={`${idPrefix}-tools`}>Tools you use now<input id={`${idPrefix}-tools`} name="currentTools" placeholder="Sellerboard, spreadsheets" maxLength={160} /></label>
         </div>
         <fieldset><legend>Marketplaces</legend><label><input type="checkbox" name="marketplaces" value="US" /> US</label><label><input type="checkbox" name="marketplaces" value="CA" /> Canada</label><label><input type="checkbox" name="marketplaces" value="Other" /> Other</label></fieldset>
-        <div className="qualification-actions"><button className="button" disabled={status === "submitting"} type="submit">{status === "submitting" ? <><LoaderCircle className="spin" /> Saving</> : <>Help shape SellerIQ <ArrowRight /></>}</button><button className="text-button" type="button" onClick={() => setStatus("complete")}>Skip for now</button></div>
+        <div className="qualification-actions"><button className="button" disabled={status === "submitting"} type="submit">{status === "submitting" ? <><LoaderCircle className="spin" /> Saving</> : <>Save details <ArrowRight /></>}</button><button className="text-button" type="button" onClick={() => setStatus("complete")}>Skip</button></div>
         <p className="form-message" aria-live="polite">{message}</p>
       </form>
     );
@@ -116,7 +116,7 @@ export function WaitlistForm({ idPrefix, location, compact = false }: WaitlistFo
       <label className="sr-only" htmlFor={`${idPrefix}-email`}>Work email</label>
       <input id={`${idPrefix}-email`} name="email" type="email" autoComplete="email" placeholder="you@company.com" value={email} onChange={(event) => setEmail(event.target.value)} required maxLength={254} />
       <label className="honeypot" aria-hidden="true">Company website<input name="companyWebsite" tabIndex={-1} autoComplete="off" /></label>
-      <button className="button" disabled={status === "submitting"} type="submit">{status === "submitting" ? <><LoaderCircle className="spin" /> Joining</> : <>Join the private beta <ArrowRight /></>}</button>
+      <button className="button" disabled={status === "submitting"} type="submit">{status === "submitting" ? <><LoaderCircle className="spin" /> Joining</> : <>Join private beta <ArrowRight /></>}</button>
       <p className="form-message" aria-live="polite">{message}</p>
     </form>
   );
