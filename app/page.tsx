@@ -1,584 +1,152 @@
 import {
-  Activity,
-  AlertTriangle,
-  ArrowRight,
-  ArrowUpDown,
-  CalendarClock,
-  Check,
-  FileSpreadsheet,
-  HelpCircle,
-  LineChart,
-  Plug,
-  Rocket,
-  Search,
-  Sparkles,
-  Stethoscope,
-  Target,
-  TrendingUp,
-  Truck,
+  AlertTriangle, ArrowRight, BarChart3, Boxes, Check, CheckCircle2, CircleDollarSign,
+  FileSpreadsheet, Globe2, LineChart, PackageCheck, Search, ShieldCheck, TrendingDown,
+  TrendingUp, Warehouse,
 } from "lucide-react";
-import {
-  AccuracyDial,
-  CountUp,
-  CoverMeter,
-  EmailCapture,
-  FeatureSpotlight,
-  ForecastSparkline,
-  GainersLosers,
-  HeroBackdrop,
-  LiveDashboard,
-  Logo,
-  Reveal,
-  SiteHeader,
-  SupplierOrder,
-  TrafficHealth,
-} from "./motion";
+import { WaitlistForm } from "./_components/waitlist-form";
 
-/* ------------------------------------------------------------------ */
-/* Data                                                                */
-/* ------------------------------------------------------------------ */
+function Mark() {
+  return <span className="brand-mark" aria-hidden="true"><span /><span /><span /></span>;
+}
 
-const heroStats = [
-  { value: 2.4, decimals: 1, prefix: "$", suffix: "B", label: "GMV analyzed" },
-  { value: 12000, decimals: 0, suffix: "+", label: "SKUs under management" },
-  { value: 9.1, decimals: 1, suffix: "%", label: "avg TACOS reduction" },
-  { value: 30, decimals: 0, suffix: " min", label: "to first insight" },
-];
+function SectionIntro({ eyebrow, title, body }: { eyebrow: string; title: string; body: string }) {
+  return <div className="section-intro"><span className="eyebrow"><span />{eyebrow}</span><h2>{title}</h2><p>{body}</p></div>;
+}
 
-const problems = [
-  {
-    icon: FileSpreadsheet,
-    title: "Drowning in spreadsheets",
-    body: "Exports from Seller Central, ad consoles, and a dozen tabs that never quite reconcile. You spend more time wrangling data than acting on it.",
-  },
-  {
-    icon: AlertTriangle,
-    title: "Can't trust your numbers",
-    body: "Different tools tell you different things. By the time you've stitched it together, the moment to act has already passed.",
-  },
-  {
-    icon: HelpCircle,
-    title: "No idea what's actually profitable",
-    body: "Top-line revenue looks great — but after fees, ads, and storage, which SKUs actually make money? You're guessing.",
-  },
-  {
-    icon: Activity,
-    title: "Reacting instead of planning",
-    body: "Stockouts, runaway ad spend, surprise fee changes. You're always putting out fires instead of building the business.",
-  },
-];
-
-const capabilities = [
-  {
-    icon: CalendarClock,
-    title: "FBA Replenishment",
-    blurb: "Reorder-by dates and days-of-cover, so you never miss a shipment window.",
-    visual: <CoverMeter />,
-  },
-  {
-    icon: Truck,
-    title: "Supplier Reorder",
-    blurb: "Exact order quantities across production, transit, and up to 4 warehouses.",
-    visual: <SupplierOrder />,
-  },
-  {
-    icon: Search,
-    title: "Per-SKU Deep Dive",
-    blurb: "Every product's full story — trend, velocity, conversion, buy box — with a forecast.",
-    visual: <ForecastSparkline />,
-  },
-  {
-    icon: Stethoscope,
-    title: "Traffic Health Diagnostics",
-    blurb: "Auto-classified traffic health, with the why and where to look first.",
-    visual: <TrafficHealth />,
-  },
-  {
-    icon: Target,
-    title: "Daily-Grain Accuracy",
-    blurb: "Daily granularity that matches Amazon Business Reports to within 0.01%.",
-    visual: <AccuracyDial />,
-  },
-  {
-    icon: ArrowUpDown,
-    title: "Gainers & Losers",
-    blurb: "What's accelerating vs slipping, across any period vs its prior window.",
-    visual: <GainersLosers />,
-  },
-];
-
-const steps = [
-  {
-    icon: Plug,
-    step: "01",
-    title: "Connect",
-    body: "Securely link your Amazon Seller account in a couple of clicks. No CSV exports, no manual setup.",
-  },
-  {
-    icon: LineChart,
-    step: "02",
-    title: "Analyze",
-    body: "Your sales, inventory, advertising, and fee data is ingested and modeled automatically — clean numbers you can trust.",
-  },
-  {
-    icon: Rocket,
-    step: "03",
-    title: "Act",
-    body: "Get clear, prioritized recommendations and deploy them with one click. Grow on purpose, not by accident.",
-  },
-];
-
-const tiers = [
-  {
-    name: "Starter",
-    price: "$49",
-    cadence: "/mo",
-    tagline: "For solo sellers finding their footing.",
-    features: [
-      "Sales Intelligence dashboard",
-      "Up to 100 active SKUs",
-      "Inventory tracking & low-stock alerts",
-      "1 Amazon marketplace",
-      "Email support",
-    ],
-    cta: "Get Early Access",
-    featured: false,
-  },
-  {
-    name: "Growth",
-    price: "$149",
-    cadence: "/mo",
-    tagline: "For growing brands ready to scale.",
-    features: [
-      "Everything in Starter",
-      "Up to 1,000 active SKUs",
-      "Advertising Intelligence (ROAS, TACOS)",
-      "Profitability & margin analytics",
-      "Up to 3 marketplaces",
-      "Weekly AI insights",
-    ],
-    cta: "Get Early Access",
-    featured: false,
-  },
-  {
-    name: "Pro",
-    price: "$349",
-    cadence: "/mo",
-    tagline: "For serious operators who want the full engine.",
-    features: [
-      "Everything in Growth",
-      "Unlimited SKUs",
-      "Full AI Recommendations engine",
-      "Auto-replenishment & dynamic pricing",
-      "Unlimited marketplaces",
-      "Priority support & onboarding",
-    ],
-    cta: "Get Early Access",
-    featured: true,
-  },
-  {
-    name: "Enterprise",
-    price: "Custom",
-    cadence: "",
-    tagline: "For agencies and multi-account operations.",
-    features: [
-      "Everything in Pro",
-      "Multi-account / agency workspaces",
-      "Custom integrations & API access",
-      "SSO & advanced permissions",
-      "Dedicated success manager",
-      "Custom SLA & contracts",
-    ],
-    cta: "Contact Sales",
-    featured: false,
-  },
-];
-
-/* ------------------------------------------------------------------ */
-/* Small reusable pieces                                               */
-/* ------------------------------------------------------------------ */
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
+function DashboardPreview() {
+  const nav = ["Sales Overview", "Product Performance", "Profitability", "Inventory", "Marketplace Compare", "Traffic & Conversion"];
   return (
-    <span className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-blue-600">
-      <span className="h-px w-6 bg-blue-600" />
-      {children}
-    </span>
+    <div className="dashboard-shell" aria-label="Illustration of the SellerIQ Sales Overview">
+      <aside className="dashboard-sidebar">
+        <div className="dashboard-brand"><Mark /><b>SellerIQ</b></div>
+        <small>ANALYTICS</small>
+        {nav.map((item, index) => <div className={index === 0 ? "dashboard-nav active" : "dashboard-nav"} key={item}><span />{item}</div>)}
+      </aside>
+      <div className="dashboard-main">
+        <div className="dashboard-heading"><div><b>Sales Overview</b><small>Amazon US + CA · Last 30 days</small></div><span className="range-pill">Last 30 days</span></div>
+        <div className="metric-grid">
+          <div><small>ORDERED REVENUE</small><b>$184,620</b><span className="positive"><TrendingUp /> 12.4% vs prior period</span></div>
+          <div><small>CONTRIBUTION PROFIT</small><b>$38,715</b><span className="positive"><TrendingUp /> 3.1% vs prior period</span></div>
+          <div><small>CONTRIBUTION MARGIN</small><b>21.0%</b><span className="negative"><TrendingDown /> 1.9 pp vs prior period</span></div>
+        </div>
+        <div className="brief-card">
+          <div className="brief-copy"><small>WHAT CHANGED?</small><b>Revenue grew, but margin tightened.</b><p>Growth came mainly from three SKUs in the US marketplace. Advertising and Amazon fees absorbed part of the gain.</p><div className="driver-bars"><span style={{ width: "84%" }} /><span style={{ width: "61%" }} /><span style={{ width: "39%" }} /></div></div>
+          <div className="action-card"><span><CheckCircle2 /> Recommended action</span><b>Review ad efficiency on SL-CW079-199</b><p>Sales increased, but contribution margin fell 4.2 percentage points.</p><small>Estimated impact: $1,240 / month</small></div>
+        </div>
+        <small className="illustrative">Illustrative data · Interface reflects the current private beta</small>
+      </div>
+    </div>
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Page                                                                */
-/* ------------------------------------------------------------------ */
+const outcomes = [
+  { icon: BarChart3, title: "Know what changed", body: "Compare equal periods and see whether revenue moved because of traffic, conversion, selling price, marketplace, or specific SKUs.", detail: "Prior period, prior year, and percentage-point changes where they belong." },
+  { icon: CircleDollarSign, title: "Know what is profitable", body: "Bring sales, advertising, Amazon fees, refunds, and landed product cost together at the SKU level.", detail: "Profit views clearly disclose missing or incomplete cost periods." },
+  { icon: Warehouse, title: "Know what to reorder", body: "Use days of cover, inbound inventory, supplier lead time, and warehouse stock to plan the next purchase order.", detail: "FBA replenishment and supplier reorder workflows in one operating view." },
+];
+
+const workflow = [
+  { number: "01", title: "Business outcome", body: "Start with revenue, contribution profit, margin, units, and the health signals that matter." },
+  { number: "02", title: "What changed?", body: "See the SKUs, marketplaces, traffic, conversion, and price movements behind the result." },
+  { number: "03", title: "What needs action?", body: "Review prioritized exceptions with the evidence and expected impact attached." },
+];
+
+const capabilities = [
+  { icon: Search, title: "SKU-level diagnostics", body: "Move from the company result to the product that caused it." },
+  { icon: Globe2, title: "US + Canada together", body: "Compare marketplaces without losing the local context." },
+  { icon: LineChart, title: "Fair comparisons", body: "Equal elapsed periods prevent misleading WTD, MTD, QTD, and YTD deltas." },
+  { icon: PackageCheck, title: "Replenishment planning", body: "See cover, inbound units, reorder timing, and suggested quantities." },
+  { icon: Boxes, title: "Warehouse-aware ordering", body: "Factor stock across production, transit, FBA, and warehouse uploads." },
+  { icon: ShieldCheck, title: "Evidence-first actions", body: "Recommendations explain the signal instead of asking you to trust a black box." },
+];
+
+const faqs = [
+  ["Who is the private beta for?", "Amazon brand owners and operators who manage meaningful SKU complexity across the US, Canada, or both—and are tired of reconciling decisions across reports and spreadsheets."],
+  ["Does SellerIQ make changes in Seller Central?", "No. The current beta is a decision-support product. It does not automatically change listings, prices, advertising, or inventory."],
+  ["How does onboarding work today?", "Beta onboarding is guided. We help establish the data inputs and confirm that the numbers reconcile before you rely on the dashboard."],
+  ["Is profitability included?", "Yes, when the required advertising, Amazon fee, refund, and landed-cost periods are complete. SellerIQ shows data-completeness warnings instead of presenting an unverified profit number as final."],
+  ["What does private beta cost?", "Pricing is still being validated with beta users. Joining the list is free and does not require a credit card or commitment."],
+];
 
 export default function Home() {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://selleriq-app-git-daily-dev-dillonleepers-projects.vercel.app";
   return (
-    <div id="top" className="relative bg-white">
-      <SiteHeader />
+    <div id="top" className="site-frame">
+      <header className="site-header">
+        <a href="#top" className="site-logo" aria-label="SellerIQ home"><Mark /><b>SellerIQ</b></a>
+        <nav aria-label="Main navigation"><a href="#product">Product</a><a href="#how-it-works">How it works</a><a href="#beta">Private beta</a><a href="#faq">FAQ</a></nav>
+        <div className="header-actions">{appUrl ? <a className="login-link" href={appUrl}>Beta login</a> : null}<a className="button button-small" href="#join">Join the beta <ArrowRight /></a></div>
+      </header>
 
       <main id="main">
-        {/* ----------------------------------------------------- */}
-        {/* Hero                                                   */}
-        {/* ----------------------------------------------------- */}
-        <section className="relative overflow-hidden">
-          <HeroBackdrop />
-
-          <div className="mx-auto max-w-6xl px-6 pt-20 pb-16 sm:pt-28">
-            <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-              <Reveal>
-                <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs font-semibold text-blue-700">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-600" />
-                  </span>
-                  Now in early access
-                </span>
-              </Reveal>
-
-              <Reveal delay={80}>
-                <h1 className="text-balance text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-                  Your Amazon business,{" "}
-                  <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
-                    finally under control.
-                  </span>
-                </h1>
-              </Reveal>
-
-              <Reveal delay={160}>
-                <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-slate-600">
-                  SellerIQ gives mid-market Amazon sellers the analytics,
-                  inventory intelligence, and AI recommendations they need to
-                  grow — without the spreadsheet chaos.
-                </p>
-              </Reveal>
-
-              <Reveal delay={240}>
-                <div className="mt-9 flex flex-col items-center gap-4">
-                  <EmailCapture />
-                  <a
-                    href="#how-it-works"
-                    className="group inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 transition hover:text-slate-900"
-                  >
-                    See How It Works
-                    <ArrowRight
-                      className="h-4 w-4 transition group-hover:translate-x-0.5"
-                      aria-hidden
-                    />
-                  </a>
-                </div>
-              </Reveal>
+        <section className="hero">
+          <div className="hero-grid">
+            <div className="hero-copy">
+              <span className="eyebrow"><span />Private beta for Amazon operators</span>
+              <h1>Know what changed in your Amazon business—and what to do next.</h1>
+              <p>SellerIQ brings sales, profitability, traffic, Buy Box, and inventory into one decision-ready view across Amazon US and Canada.</p>
+              <WaitlistForm idPrefix="hero" location="hero" compact />
+              <p className="form-note">No credit card. No sales spam. Just beta access and occasional product updates.</p>
             </div>
+            <div className="hero-proof"><span>Built inside a real Amazon operation</span><span>Amazon US + Canada</span><span>Evidence behind every action</span></div>
+          </div>
+          <DashboardPreview />
+        </section>
 
-            {/* Dashboard mockup */}
-            <Reveal delay={120} className="relative mt-16 sm:mt-20">
-              <LiveDashboard />
-            </Reveal>
+        <section className="proof-strip" aria-label="Product principles">
+          <div><b>Daily-grain</b><span>seller data</span></div><div><b>SKU-level</b><span>decisions</span></div><div><b>Equal-period</b><span>comparisons</span></div><div><b>Transparent</b><span>data freshness</span></div>
+        </section>
+
+        <section id="product" className="section outcomes-section">
+          <SectionIntro eyebrow="One operating picture" title="From reporting to a decision." body="SellerIQ is designed around the questions an Amazon operator asks every morning—not around another wall of charts." />
+          <div className="outcome-grid">{outcomes.map((item) => <article className="outcome-card" key={item.title}><div className="icon-box"><item.icon /></div><h3>{item.title}</h3><p>{item.body}</p><small><Check />{item.detail}</small></article>)}</div>
+        </section>
+
+        <section className="section workflow-section">
+          <div className="workflow-copy"><span className="eyebrow light"><span />The daily briefing</span><h2>A hierarchy built for operators, not spectators.</h2><p>The first screen tells you the outcome. The next layer tells you why. The action feed tells you where to focus.</p><a className="inline-link" href="#join">Help shape the beta <ArrowRight /></a></div>
+          <div className="workflow-list">{workflow.map((item) => <div key={item.number}><span>{item.number}</span><div><h3>{item.title}</h3><p>{item.body}</p></div></div>)}</div>
+        </section>
+
+        <section className="section capabilities-section">
+          <SectionIntro eyebrow="What is live" title="The connected workflows sellers actually need." body="Sales, profit, traffic, Buy Box, and inventory stay separate enough to be trustworthy—but connected enough to explain the business." />
+          <div className="capability-grid">{capabilities.map((item) => <article key={item.title}><item.icon /><h3>{item.title}</h3><p>{item.body}</p></article>)}</div>
+        </section>
+
+        <section id="how-it-works" className="section how-section">
+          <SectionIntro eyebrow="How it works today" title="Guided onboarding. Clean inputs. Clear decisions." body="The beta is intentionally hands-on while we learn which workflows create the most value for serious Amazon operators." />
+          <div className="steps">
+            <article><span>1</span><FileSpreadsheet /><h3>Establish the inputs</h3><p>We help bring together the seller, advertising, profitability, and inventory data the beta supports.</p></article>
+            <article><span>2</span><ShieldCheck /><h3>Confirm the numbers</h3><p>Freshness and completeness are visible. We reconcile before asking you to act on the output.</p></article>
+            <article><span>3</span><BarChart3 /><h3>Run the business</h3><p>Use the overview, product diagnostics, profitability, and replenishment views to decide what happens next.</p></article>
           </div>
         </section>
 
-        {/* ----------------------------------------------------- */}
-        {/* Stat strip                                             */}
-        {/* ----------------------------------------------------- */}
-        <section className="border-y border-slate-200 bg-slate-50">
-          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-px overflow-hidden px-6 py-2 lg:grid-cols-4">
-            {heroStats.map((stat, i) => (
-              <Reveal
-                key={stat.label}
-                delay={i * 90}
-                className="px-4 py-8 text-center"
-              >
-                <p className="text-3xl font-bold tabular-nums text-slate-900 sm:text-4xl">
-                  <CountUp
-                    value={stat.value}
-                    decimals={stat.decimals}
-                    prefix={stat.prefix}
-                    suffix={stat.suffix}
-                  />
-                </p>
-                <p className="mt-1 text-sm font-medium text-slate-600">
-                  {stat.label}
-                </p>
-              </Reveal>
-            ))}
+        <section id="beta" className="section beta-section">
+          <div className="beta-heading"><span className="eyebrow"><span />Private-beta transparency</span><h2>Built far enough to use.<br />Early enough to influence.</h2></div>
+          <div className="beta-columns">
+            <div><h3><CheckCircle2 />Available in the current beta</h3><ul><li>Sales overview and fair period comparisons</li><li>SKU and marketplace contribution drivers</li><li>Traffic, conversion, and Buy Box diagnostics</li><li>Profitability with data-completeness controls</li><li>FBA replenishment and supplier reorder planning</li></ul></div>
+            <div><h3><AlertTriangle />What we are still validating</h3><ul><li>The fastest onboarding path for new sellers</li><li>The most useful action ranking and impact estimates</li><li>Which integrations should come next</li><li>Packaging and willingness to pay</li><li>Where automation should—and should not—exist</li></ul></div>
           </div>
         </section>
 
-        {/* ----------------------------------------------------- */}
-        {/* Problem                                                */}
-        {/* ----------------------------------------------------- */}
-        <section className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <Eyebrow>The clarity problem</Eyebrow>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Sound familiar?
-            </h2>
-            <p className="mt-4 text-lg text-slate-600">
-              Most sellers don&apos;t have a data problem. They have a clarity
-              problem.
-            </p>
-          </Reveal>
-
-          <div className="mt-14 grid gap-5 sm:grid-cols-2">
-            {problems.map((p, i) => (
-              <Reveal key={p.title} delay={i * 90}>
-                <div className="group h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-600/5">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
-                    <p.icon className="h-5 w-5" aria-hidden />
-                  </div>
-                  <h3 className="mt-5 text-lg font-semibold text-slate-900">
-                    {p.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    {p.body}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+        <section className="section founder-section">
+          <div className="founder-mark"><Mark /></div>
+          <blockquote>“SellerIQ started as the operating view we wanted for our own Amazon business: one place that could explain the result, show the evidence, and point to the next decision.”</blockquote>
+          <div><b>Built by Amazon operators</b><span>Inside Merkury Innovations</span></div>
         </section>
 
-        {/* ----------------------------------------------------- */}
-        {/* Features — dark band for contrast & drama              */}
-        {/* ----------------------------------------------------- */}
-        <section
-          id="features"
-          className="relative overflow-hidden bg-slate-950"
-        >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_0%,rgba(37,99,235,0.18),transparent_45%),radial-gradient(circle_at_85%_100%,rgba(99,102,241,0.14),transparent_45%)]"
-          />
-          <div className="relative mx-auto max-w-6xl px-6 py-24 sm:py-32">
-            <Reveal className="mx-auto max-w-2xl text-center">
-              <span className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-blue-400">
-                <span className="h-px w-6 bg-blue-400" />
-                Features
-              </span>
-              <h2 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                Everything you need to operate.
-              </h2>
-              <p className="mt-4 text-lg text-slate-300">
-                Five intelligence engines, working as one source of truth.
-                Hover to explore — or watch it cycle.
-              </p>
-            </Reveal>
-
-            <Reveal className="mt-14">
-              <FeatureSpotlight />
-            </Reveal>
-
-            {/* Deeper detail — same section, second movement */}
-            <Reveal className="mx-auto mt-24 max-w-2xl text-center sm:mt-28">
-              <h3 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                Built for operators, not spectators.
-              </h3>
-              <p className="mt-3 text-slate-300">
-                The dashboards are the entry point. This is the depth that moves
-                the needle.
-              </p>
-            </Reveal>
-
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {capabilities.map((c, i) => (
-                <Reveal key={c.title} delay={(i % 3) * 90}>
-                  <div className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:-translate-y-1 hover:border-blue-400/30 hover:bg-white/[0.06]">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-blue-300 transition group-hover:bg-blue-600 group-hover:text-white">
-                        <c.icon className="h-5 w-5" aria-hidden />
-                      </div>
-                      <h4 className="text-base font-semibold text-white">
-                        {c.title}
-                      </h4>
-                    </div>
-                    <p className="mt-3 text-sm leading-relaxed text-slate-300">
-                      {c.blurb}
-                    </p>
-                    <div className="mt-5">{c.visual}</div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
+        <section id="faq" className="section faq-section">
+          <SectionIntro eyebrow="Questions, answered" title="A clear beta beats a vague promise." body="What you should know before joining." />
+          <div className="faq-list">{faqs.map(([question, answer]) => <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div>
         </section>
 
-        {/* ----------------------------------------------------- */}
-        {/* How It Works                                           */}
-        {/* ----------------------------------------------------- */}
-        <section
-          id="how-it-works"
-          className="mx-auto max-w-6xl px-6 py-24 sm:py-32"
-        >
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <Eyebrow>How it works</Eyebrow>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              From connected to compounding in three steps.
-            </h2>
-          </Reveal>
-
-          <div className="relative mt-16 grid gap-10 md:grid-cols-3">
-            {/* connecting line */}
-            <div
-              aria-hidden
-              className="absolute left-0 right-0 top-6 hidden h-0.5 bg-gradient-to-r from-blue-200 via-blue-400 to-blue-200 md:block"
-            />
-            {steps.map((s, i) => (
-              <Reveal
-                key={s.step}
-                delay={i * 140}
-                className="relative flex flex-col items-start"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-blue-200 bg-white text-blue-600 shadow-sm">
-                    <s.icon className="h-5 w-5" aria-hidden />
-                  </div>
-                  <span className="font-mono text-sm font-semibold text-blue-600">
-                    {s.step}
-                  </span>
-                </div>
-                <h3 className="mt-5 text-xl font-semibold text-slate-900">
-                  {s.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                  {s.body}
-                </p>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        {/* ----------------------------------------------------- */}
-        {/* Pricing                                                */}
-        {/* ----------------------------------------------------- */}
-        <section id="pricing" className="border-t border-slate-200 bg-slate-50">
-          <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
-            <Reveal className="mx-auto max-w-2xl text-center">
-              <Eyebrow>Pricing</Eyebrow>
-              <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                Plans that scale with your catalog.
-              </h2>
-              <p className="mt-4 text-lg text-slate-600">
-                Start where you are. Upgrade when you&apos;re ready. No long-term
-                contracts.
-              </p>
-            </Reveal>
-
-            <div className="mt-14 grid gap-6 lg:grid-cols-4">
-              {tiers.map((tier, i) => (
-                <Reveal key={tier.name} delay={i * 80} className="flex">
-                  <div
-                    className={`relative flex w-full flex-col rounded-2xl border p-6 transition hover:-translate-y-1 ${
-                      tier.featured
-                        ? "border-blue-600 bg-white shadow-2xl shadow-blue-600/15 lg:-mt-4 lg:mb-[-1rem]"
-                        : "border-slate-200 bg-white shadow-sm hover:shadow-lg"
-                    }`}
-                  >
-                    {tier.featured && (
-                      <span className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 rounded-full bg-blue-600 px-3 py-1 text-xs font-medium text-white shadow-lg shadow-blue-600/30">
-                        <TrendingUp className="h-3 w-3" aria-hidden />
-                        Most Popular
-                      </span>
-                    )}
-                    <h3 className="text-base font-semibold text-slate-900">
-                      {tier.name}
-                    </h3>
-                    <div className="mt-4 flex items-baseline gap-1">
-                      <span className="text-4xl font-bold tracking-tight text-slate-900">
-                        {tier.price}
-                      </span>
-                      {tier.cadence && (
-                        <span className="text-sm text-slate-500">
-                          {tier.cadence}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-3 text-sm text-slate-600">{tier.tagline}</p>
-
-                    <a
-                      href="#early-access"
-                      className={`mt-6 inline-flex h-11 items-center justify-center rounded-lg text-sm font-semibold transition ${
-                        tier.featured
-                          ? "bg-blue-600 text-white shadow-sm shadow-blue-600/25 hover:bg-blue-700"
-                          : "border border-slate-300 bg-white text-slate-900 hover:border-slate-400 hover:bg-slate-50"
-                      }`}
-                    >
-                      {tier.cta}
-                    </a>
-
-                    <ul className="mt-7 space-y-3 border-t border-slate-200 pt-6">
-                      {tier.features.map((feat) => (
-                        <li
-                          key={feat}
-                          className="flex items-start gap-2.5 text-sm text-slate-700"
-                        >
-                          <Check
-                            className="mt-0.5 h-4 w-4 shrink-0 text-blue-600"
-                            aria-hidden
-                          />
-                          <span>{feat}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ----------------------------------------------------- */}
-        {/* Final CTA                                              */}
-        {/* ----------------------------------------------------- */}
-        <section id="early-access" className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
-          <Reveal>
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-600 px-6 py-16 text-center shadow-2xl shadow-blue-600/20 sm:px-16">
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.18),transparent_60%)]"
-              />
-              <div className="relative flex flex-col items-center">
-                <h2 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                  Stop guessing. Start growing.
-                </h2>
-                <p className="mx-auto mt-4 max-w-xl text-lg text-blue-50">
-                  Join the early access list and be first in line when SellerIQ
-                  opens up.
-                </p>
-                <div className="mt-8 flex justify-center">
-                  <EmailCapture tone="dark" />
-                </div>
-                <p className="mt-4 flex items-center gap-1.5 text-sm text-blue-100">
-                  <Sparkles className="h-4 w-4" aria-hidden />
-                  No credit card. No spam. Just early access.
-                </p>
-              </div>
-            </div>
-          </Reveal>
+        <section id="join" className="final-cta">
+          <div className="final-copy"><span className="eyebrow light"><span />Private beta</span><h2>Build the operating system you wish Amazon gave you.</h2><p>Join the waitlist, tell us where your current workflow breaks, and help decide what SellerIQ becomes.</p><div className="cta-assurances"><span><Check />Free to join</span><span><Check />No credit card</span><span><Check />Opt out anytime</span></div></div>
+          <div className="signup-panel"><h3>Request private-beta access</h3><p>Start with your email. The rest is optional.</p><WaitlistForm idPrefix="final" location="final" /></div>
         </section>
       </main>
 
-      {/* ------------------------------------------------------- */}
-      {/* Footer                                                   */}
-      {/* ------------------------------------------------------- */}
-      <footer className="border-t border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-10 sm:flex-row">
-          <Logo />
-          <nav className="flex items-center gap-6 text-sm text-slate-600">
-            <a href="#features" className="transition hover:text-slate-900">
-              Features
-            </a>
-            <a href="#pricing" className="transition hover:text-slate-900">
-              Pricing
-            </a>
-            <a
-              href="mailto:dleeper@merkuryinnovations.com"
-              className="transition hover:text-slate-900"
-            >
-              Contact
-            </a>
-          </nav>
-          <p className="text-sm text-slate-500">© 2026 SellerIQ</p>
-        </div>
-      </footer>
+      <footer><div className="footer-brand"><a href="#top" className="site-logo"><Mark /><b>SellerIQ</b></a><p>Decision-ready analytics for Amazon operators.</p></div><div className="footer-links"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="mailto:dleeper@merkuryinnovations.com">Contact</a></div><small>© {new Date().getFullYear()} Merkury Innovations. SellerIQ is not affiliated with Amazon.</small></footer>
     </div>
   );
 }
