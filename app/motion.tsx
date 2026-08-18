@@ -208,7 +208,7 @@ export function CountUp({
 /* Logo                                                                */
 /* ------------------------------------------------------------------ */
 
-export function Logo() {
+export function Logo({ tone = "dark" }: { tone?: "light" | "dark" }) {
   return (
     <a
       href="#top"
@@ -218,8 +218,8 @@ export function Logo() {
       <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 shadow-md shadow-blue-600/25">
         <BarChart3 className="h-5 w-5 text-white" strokeWidth={2.5} />
       </span>
-      <span className="text-lg font-semibold tracking-tight text-slate-900">
-        Seller<span className="text-blue-600">IQ</span>
+      <span className={`text-lg font-semibold tracking-tight ${tone === "dark" ? "text-white" : "text-slate-900"}`}>
+        Seller<span className={tone === "dark" ? "text-cyan-300" : "text-blue-600"}>IQ</span>
       </span>
     </a>
   );
@@ -230,9 +230,9 @@ export function Logo() {
 /* ------------------------------------------------------------------ */
 
 const navLinks = [
-  { label: "Features", href: "#features" },
+  { label: "Product", href: "#product" },
   { label: "Pricing", href: "#pricing" },
-  { label: "How It Works", href: "#how-it-works" },
+  { label: "Workflow", href: "#workflow" },
 ];
 
 export function SiteHeader() {
@@ -255,13 +255,13 @@ export function SiteHeader() {
       }`}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Logo />
+        <Logo tone={scrolled ? "light" : "dark"} />
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-slate-600 transition hover:text-slate-900"
+              className={`text-sm font-medium transition ${scrolled ? "text-slate-600 hover:text-slate-900" : "text-slate-400 hover:text-white"}`}
             >
               {link.label}
             </a>
@@ -269,10 +269,10 @@ export function SiteHeader() {
         </nav>
         <div className="hidden items-center gap-2 sm:flex">
           <a
-            href="#"
-            className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
+            href="#product"
+            className={`rounded-lg px-3 py-2 text-sm font-medium transition ${scrolled ? "text-slate-600 hover:text-slate-900" : "text-slate-400 hover:text-white"}`}
           >
-            Log In
+            Explore Product
           </a>
           <a
             href="#early-access"
@@ -287,7 +287,7 @@ export function SiteHeader() {
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? "Close menu" : "Open menu"}
-          className="rounded-lg p-2 text-slate-700 transition hover:bg-slate-100 sm:hidden"
+          className={`rounded-lg p-2 transition sm:hidden ${scrolled ? "text-slate-700 hover:bg-slate-100" : "text-white hover:bg-white/10"}`}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
