@@ -27,6 +27,7 @@ import {
   GainersLosers,
   HeroBackdrop,
   LiveDashboard,
+  OperatorConsole,
   Logo,
   Reveal,
   SiteHeader,
@@ -318,22 +319,32 @@ export default function Home() {
             </p>
           </Reveal>
 
-          <div className="mt-14 grid gap-5 sm:grid-cols-2">
+          <div className="mt-14 divide-y divide-slate-200 border-y border-slate-200">
             {problems.map((p, i) => (
               <Reveal key={p.title} delay={i * 90}>
-                <div className="group h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-600/5">
+                <div className="group grid gap-4 py-7 sm:grid-cols-[3rem_15rem_1fr] sm:items-center">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
                     <p.icon className="h-5 w-5" aria-hidden />
                   </div>
-                  <h3 className="mt-5 text-lg font-semibold text-slate-900">
+                  <h3 className="text-lg font-semibold text-slate-900">
                     {p.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  <p className="text-sm leading-relaxed text-slate-600">
                     {p.body}
                   </p>
                 </div>
               </Reveal>
             ))}
+          </div>
+        </section>
+
+        <section className="border-y border-slate-200 bg-[linear-gradient(180deg,#f8fafc,#fff)]">
+          <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
+            <Reveal className="grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:items-end">
+              <div><Eyebrow>See the decision</Eyebrow><h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">One operating layer from signal to action.</h2></div>
+              <p className="max-w-xl text-lg leading-8 text-slate-600 lg:justify-self-end">Switch the live view, inspect the recommendation, and queue the next move. SellerIQ turns scattered Amazon data into a daily operating rhythm.</p>
+            </Reveal>
+            <Reveal className="mt-12"><OperatorConsole /></Reveal>
           </div>
         </section>
 

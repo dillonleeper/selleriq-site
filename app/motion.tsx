@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useId,
   useRef,
   useState,
   type ComponentType,
@@ -337,6 +338,8 @@ export function EmailCapture({
 }) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+  const inputId = useId();
 
   if (submitted) {
     return (
@@ -357,17 +360,29 @@ export function EmailCapture({
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        if (email.trim()) setSubmitted(true);
+        if (!email.trim() || status === "loading") return;
+        setStatus("loading");
+        try {
+          const response = await fetch("/api/waitlist", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: email.trim() }),
+          });
+          if (!response.ok) throw new Error("Signup failed");
+          setSubmitted(true);
+        } catch {
+          setStatus("error");
+        }
       }}
       className={`flex w-full max-w-md flex-col gap-3 sm:flex-row ${className}`}
     >
-      <label htmlFor="early-access-email" className="sr-only">
+      <label htmlFor={inputId} className="sr-only">
         Work email
       </label>
       <input
-        id="early-access-email"
+        id={inputId}
         type="email"
         required
         value={email}
@@ -377,14 +392,20 @@ export function EmailCapture({
       />
       <button
         type="submit"
+        disabled={status === "loading"}
         className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 transition hover:bg-blue-700"
       >
-        {buttonLabel}
+        {status === "loading" ? "Joining…" : buttonLabel}
         <ArrowRight
           className="h-4 w-4 transition group-hover:translate-x-0.5"
           aria-hidden
         />
       </button>
+      {status === "error" && (
+        <p className="text-sm font-medium text-red-600 sm:basis-full" role="alert">
+          We couldn&apos;t add you just now. Please try again.
+        </p>
+      )}
     </form>
   );
 }
@@ -433,6 +454,64 @@ export function HeroBackdrop() {
         style={{ transform: "translateY(var(--py2, 0px))" }}
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,rgba(37,99,235,0.10),transparent_55%)]" />
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Operator console — an interactive product story, not a screenshot   */
+/* ------------------------------------------------------------------ */
+
+const consoleViews = [
+  { label: "Revenue", value: "$418,920", delta: "+18.4%", color: "#2563eb" },
+  { label: "Profit", value: "$96,342", delta: "+12.7%", color: "#7c3aed" },
+  { label: "Inventory", value: "43 days", delta: "6 risks", color: "#0891b2" },
+];
+
+export function OperatorConsole() {
+  const [active, setActive] = useState(0);
+  const [resolved, setResolved] = useState(false);
+  const view = consoleViews[active];
+
+  return (
+    <div className="overflow-hidden rounded-[1.75rem] border border-slate-800 bg-slate-950 text-white shadow-2xl shadow-blue-950/30">
+      <div className="flex flex-col border-b border-white/10 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3 px-5 py-4">
+          <span className="grid h-9 w-9 place-items-center rounded-lg bg-blue-500/15 text-blue-300"><BarChart3 className="h-4 w-4" /></span>
+          <div><p className="text-sm font-semibold">Daily command center</p><p className="text-xs text-slate-400">Updated 2 minutes ago</p></div>
+        </div>
+        <div className="flex gap-1 overflow-x-auto px-4 pb-4 sm:pb-0" role="tablist" aria-label="Dashboard metric">
+          {consoleViews.map((item, index) => (
+            <button key={item.label} type="button" role="tab" aria-selected={index === active} onClick={() => setActive(index)} className={`rounded-lg px-3 py-2 text-xs font-medium transition ${index === active ? "bg-white text-slate-950" : "text-slate-400 hover:bg-white/10 hover:text-white"}`}>
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="grid lg:grid-cols-[1.45fr_.75fr]">
+        <div className="border-b border-white/10 p-5 sm:p-7 lg:border-b-0 lg:border-r">
+          <div className="flex items-end justify-between gap-4">
+            <div><p className="text-xs uppercase tracking-[.18em] text-slate-500">{view.label} · last 30 days</p><p className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{view.value}</p></div>
+            <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">{view.delta}</span>
+          </div>
+          <svg viewBox="0 0 620 190" className="mt-6 h-48 w-full" preserveAspectRatio="none" role="img" aria-label={`${view.label} trend over 30 days`}>
+            <defs><linearGradient id="console-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={view.color} stopOpacity=".35"/><stop offset="1" stopColor={view.color} stopOpacity="0"/></linearGradient></defs>
+            {[30,70,110,150].map((y) => <line key={y} x1="0" x2="620" y1={y} y2={y} stroke="rgba(255,255,255,.08)" />)}
+            <path d="M0 154 C55 148 73 121 121 128 S198 143 244 101 S324 113 368 73 S448 92 492 51 S570 55 620 18 L620 190 L0 190 Z" fill="url(#console-fill)" />
+            <path d="M0 154 C55 148 73 121 121 128 S198 143 244 101 S324 113 368 73 S448 92 492 51 S570 55 620 18" fill="none" stroke={view.color} strokeWidth="4" strokeLinecap="round" className="console-line" />
+          </svg>
+          <div className="grid grid-cols-3 gap-3 border-t border-white/10 pt-4 text-xs"><span><b className="block text-sm text-white">4.7%</b><span className="text-slate-500">Conversion</span></span><span><b className="block text-sm text-white">$31.24</b><span className="text-slate-500">Avg. order</span></span><span><b className="block text-sm text-white">1,842</b><span className="text-slate-500">Orders</span></span></div>
+        </div>
+        <aside className="p-5 sm:p-7" aria-label="Priority recommendation">
+          <div className="flex items-center justify-between"><p className="text-xs uppercase tracking-[.18em] text-slate-500">Next best action</p><Sparkles className="h-4 w-4 text-violet-300" /></div>
+          <p className="mt-5 text-lg font-semibold">Protect 11 days of revenue</p>
+          <p className="mt-2 text-sm leading-6 text-slate-400">Increase the FBA transfer for Organic Tea by 480 units before Wednesday.</p>
+          <div className="my-5 space-y-3 border-y border-white/10 py-5 text-sm"><p className="flex justify-between"><span className="text-slate-500">Confidence</span><span>94%</span></p><p className="flex justify-between"><span className="text-slate-500">Cash required</span><span>$3,216</span></p><p className="flex justify-between"><span className="text-slate-500">Revenue protected</span><span className="text-emerald-300">$18,740</span></p></div>
+          <button type="button" onClick={() => setResolved(true)} disabled={resolved} className={`w-full rounded-xl px-4 py-3 text-sm font-semibold transition ${resolved ? "bg-emerald-400/15 text-emerald-300" : "bg-blue-600 text-white hover:bg-blue-500"}`}>
+            {resolved ? "Action queued ✓" : "Queue replenishment"}
+          </button>
+        </aside>
+      </div>
     </div>
   );
 }

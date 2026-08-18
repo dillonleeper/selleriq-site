@@ -1,4 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SellerIQ marketing site
+
+## Vercel environment variables
+
+Configure these for Preview and Production in Vercel. None should be committed.
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL used by the server-side waitlist route. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase publishable/anon key. The `waitlist` table must allow anonymous inserts through a narrow RLS policy. Never use the service-role key here. |
+| `RESEND_API_KEY` | No | Sends signup notifications. If absent or delivery fails, signup still succeeds. |
+| `WAITLIST_EMAIL_FROM` | No | Verified Resend sender, for example `SellerIQ <hello@selleriq.com>`. Defaults to Resend's test sender. |
+| `WAITLIST_NOTIFICATION_TO` | No | Notification recipient. Defaults to `leeperdillon@gmail.com`. |
+
+The `waitlist` table must have a unique constraint on `email` so repeated submissions remain idempotent. Because Supabase no longer exposes new tables automatically, grant only `INSERT` to `anon`, enable RLS, and add an insert-only policy for this table. Do not grant anonymous `SELECT`, `UPDATE`, or `DELETE` access.
+
+```sql
+grant insert on table public.waitlist to anon;
+alter table public.waitlist enable row level security;
+create policy "public can join waitlist"
+on public.waitlist for insert to anon
+with check (char_length(email) between 3 and 254);
+```
+
+Email delivery is deliberately best-effort and is scheduled only after a successful Supabase insert.
 
 ## Getting Started
 
