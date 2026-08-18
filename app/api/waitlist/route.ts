@@ -58,25 +58,28 @@ export async function POST(request: Request) {
     method: "POST",
     headers: {
       apikey: supabaseKey,
-      Authorization: `Bearer ${supabaseKey}`,
       "Content-Type": "application/json",
-      Prefer: "return=minimal,resolution=ignore-duplicates",
+      Prefer: "return=minimal",
     },
     body: JSON.stringify({ email, cta_location: ctaLocation }),
   });
 
-  if (!signup.ok) {
+  const isDuplicate = signup.status === 409;
+
+  if (!signup.ok && !isDuplicate) {
     console.error("Waitlist insert failed", { status: signup.status });
     return NextResponse.json({ error: "Unable to join waitlist" }, { status: 502 });
   }
 
-  after(async () => {
-    try {
-      await notifySignup(email);
-    } catch (error) {
-      console.error("Waitlist notification failed", error);
-    }
-  });
+  if (!isDuplicate) {
+    after(async () => {
+      try {
+        await notifySignup(email);
+      } catch (error) {
+        console.error("Waitlist notification failed", error);
+      }
+    });
+  }
 
-  return NextResponse.json({ ok: true }, { status: 201 });
+  return NextResponse.json({ ok: true }, { status: isDuplicate ? 200 : 201 });
 }
