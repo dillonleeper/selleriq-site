@@ -35,9 +35,11 @@ function escapeHtml(value: string) {
 
 export async function POST(request: Request) {
   let email = "";
+  let ctaLocation: "hero" | "final" = "hero";
   try {
-    const body = (await request.json()) as { email?: unknown };
+    const body = (await request.json()) as { email?: unknown; ctaLocation?: unknown };
     email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+    ctaLocation = body.ctaLocation === "final" ? "final" : "hero";
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
@@ -46,13 +48,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Enter a valid email address" }, { status: 400 });
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseUrl = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!supabaseUrl || !supabaseKey) {
     return NextResponse.json({ error: "Waitlist is not configured" }, { status: 503 });
   }
 
-  const signup = await fetch(`${supabaseUrl}/rest/v1/waitlist`, {
+  const signup = await fetch(`${supabaseUrl}/rest/v1/waitlist_signups`, {
     method: "POST",
     headers: {
       apikey: supabaseKey,
@@ -60,7 +62,7 @@ export async function POST(request: Request) {
       "Content-Type": "application/json",
       Prefer: "return=minimal,resolution=ignore-duplicates",
     },
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ email, cta_location: ctaLocation }),
   });
 
   if (!signup.ok) {

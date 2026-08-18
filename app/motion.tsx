@@ -331,15 +331,18 @@ export function EmailCapture({
   buttonLabel = "Get Early Access",
   className = "",
   tone = "light",
+  ctaLocation,
 }: {
   buttonLabel?: string;
   className?: string;
   tone?: "light" | "dark";
+  ctaLocation?: "hero" | "final";
 }) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const inputId = useId();
+  const resolvedCtaLocation = ctaLocation ?? (buttonLabel === "Request access" ? "final" : "hero");
 
   if (submitted) {
     return (
@@ -368,7 +371,7 @@ export function EmailCapture({
           const response = await fetch("/api/waitlist", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: email.trim() }),
+            body: JSON.stringify({ email: email.trim(), ctaLocation: resolvedCtaLocation }),
           });
           if (!response.ok) throw new Error("Signup failed");
           setSubmitted(true);
@@ -388,7 +391,7 @@ export function EmailCapture({
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="you@company.com"
-        className={`h-12 flex-1 rounded-xl border px-4 text-sm outline-none transition ${inputClasses}`}
+        className={`h-12 shrink-0 rounded-xl border px-4 text-sm outline-none transition sm:flex-1 ${inputClasses}`}
       />
       <button
         type="submit"
